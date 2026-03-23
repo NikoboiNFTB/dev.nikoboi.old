@@ -2,7 +2,7 @@
 
 Repository for old/legacy stuff. Deprecated things some may find useful.
 
-## Repo | Folder
+## Correspondence
 
 | Repo                                                                          | Folder                                            |
 | ----------------------------------------------------------------------------- | ------------------------------------------------- |
