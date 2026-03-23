@@ -15,3 +15,7 @@ Repository for old/legacy stuff. Deprecated things some may find useful.
 | [Songsterr-Tweaks](https://github.com/NikoboiNFTB/Songsterr-Tweaks)           | [/Songsterr-Tweaks](/Songsterr-Tweaks/)           |
 | [TikTok-Tools](https://github.com/NikoboiNFTB/TikTok-Tools)                   | [/TikTok-Tools](/TikTok-Tools/)                   |
 | [YouTube-Tweaks](https://github.com/NikoboiNFTB/YouTube-Tweaks)               | [/YouTube-Tweaks](/YouTube-Tweaks/)               |
+
+## Note
+
+Projects in this repository are no longer maintained or updated. **Use at your own risk**.
