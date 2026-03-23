@@ -1,0 +1,153 @@
+:root {
+  --scale: 1.5;
+  --gap: calc(12px * var(--scale));
+  --primary-color: #3366cc;
+  --bg-color: #181818;
+  --text-color: #ffffff;
+  --input-bg: #222;
+  --input-border: #444;
+  --link-hover: #002F6C;
+}
+
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  background-color: #000;
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 80%;
+  background-color: #000;
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+.container {
+  background-color: var(--bg-color);
+  padding: calc(32px * var(--scale));
+  border-radius: calc(12px * var(--scale));
+  box-shadow: 0 0 calc(16px * var(--scale)) rgba(0, 0, 0, 0.5);
+  width: 90%;
+  max-width: 500px;
+  box-sizing: border-box;
+}
+
+.container input {
+  display: block;
+  width: 100%;
+  padding: calc(10px * var(--scale));
+  margin: calc(8px * var(--scale)) 0;
+  font-size: 16px;
+  border-radius: calc(6px * var(--scale));
+  border: 1px solid var(--input-border);
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  box-sizing: border-box;
+}
+
+.buttons {
+  display: flex;
+  justify-content: center;
+  gap: calc(16px * var(--scale));
+  margin: calc(16px * var(--scale)) 0;
+}
+
+.buttons a {
+  padding: 16px 24px;
+  background-color: var(--primary-color);
+  color: var(--text-color);
+  text-decoration: none;
+  border-radius: calc(6px * var(--scale));
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.buttons a:hover {
+  background-color: var(--link-hover);
+  transform: translateY(-2px);
+  cursor: pointer;
+}
+
+.buttons a.copy-output {
+  background-color: #555;
+}
+
+.buttons a.copy-output:hover {
+  background-color: #777;
+}
+
+.container output {
+  display: block;
+  width: 100%;
+  min-height: 80px;
+  padding: calc(10px * var(--scale));
+  margin-top: calc(8px * var(--scale));
+  background-color: #111;
+  border: 1px solid var(--input-border);
+  border-radius: calc(6px * var(--scale));
+  color: var(--text-color);
+  word-break: break-word;
+  white-space: pre-wrap;
+  box-sizing: border-box;
+}
+
+.notice {
+  padding-top: 16px;
+}
+
+@media screen and (max-width: 480px) {
+  :root {
+    --scale: 1.1;
+  }
+
+  .container {
+    width: 95%;
+    max-width: none;
+    padding: 20px;
+    border-radius: 10px;
+  }
+
+  .container input {
+    font-size: 16px;
+    padding: 12px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .buttons a {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 14px 0;
+    font-size: 16px;
+    border-radius: 8px;
+  }
+
+  .container output {
+    font-size: 15px;
+  }
+}

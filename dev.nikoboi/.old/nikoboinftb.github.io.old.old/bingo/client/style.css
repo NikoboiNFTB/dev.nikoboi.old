@@ -1,0 +1,256 @@
+:root {
+    --primary-color: #002F6C;
+    --bg-color: #181818;
+    --bg-box: #222222;
+    --accent-color: #ff7f00;
+    --text-color: #ffffff;
+    --link-bg: #222;
+    --link-hover: #002F6C;
+    --icon-filter: invert(1) brightness(2);
+    --font-size-base: 32px;
+    --gap: 8px;
+    --black: #000000;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000000;
+    color: var(--text-color);
+    font-family: 'Arial', sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: var(--font-size-base);
+    flex-direction: column;
+    padding: 16px;
+}
+
+.main-container {
+    background-color: var(--bg-color);
+    width: 90%;
+    max-width: 600px;
+    border-radius: 18px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.4);
+    box-sizing: border-box;
+    border: 2px solid #333;
+}
+
+.bingo-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.headers {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+    margin-bottom: 12px;
+    border-radius: 18px;
+    gap: 12px;
+}
+
+.headers .b-header,
+.headers .i-header,
+.headers .n-header,
+.headers .g-header,
+.headers .o-header {
+    border: 2px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    font-weight: bold;
+    border-radius: 18px;
+    font-size: 64px;
+}
+
+.bingo-board {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 12px;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 100%;
+    max-height: 100%;
+    justify-items: stretch;
+    align-items: stretch;
+}
+
+.bingo-board div {
+    border: 2px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 48px;
+    user-select: none;
+    box-sizing: border-box;
+    padding: 0;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: #222222;
+    border-radius: 18px;
+}
+
+.bingo-board div:hover {
+    background-color: #444;
+    transform: scale(1.1);
+}
+
+.bingo-board div.marked {
+    background-color: var(--primary-color) !important;
+    color: #ffffff;
+}
+
+.bingo-board div.marked:hover {
+    background-color: var(--primary-color);
+    transform: scale(1.1);
+}
+
+.free-space {
+    aspect-ratio: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 0;
+    min-height: 0;
+}
+
+.free-space img.logo-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 18px;
+    object-fit: cover;
+}
+
+.marked {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+#resetBtn {
+    width: 60%;
+    display: flex;
+    padding: 16px;
+    background-color: var(--link-bg);
+    border: 2px solid #333;
+    border-radius: 18px;
+    color: var(--text-color);
+    font-size: 18px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-top: 12px;
+    justify-content: center;
+}
+
+#resetBtn:hover {
+    background-color: var(--link-hover);
+    transform: translateY(-2px);
+}
+
+#winMessage {
+    width: 60%;
+    display: none;
+    margin-top: 12px;
+    padding: 16px;
+    background-color: #005ed8;
+    color: #000;
+    border: 2px solid #333;
+    border-radius: 18px;
+    font-size: 24px;
+    font-weight: bold;
+    animation: pop 0.5s ease-in-out forwards;
+    text-align: center;
+}
+
+@keyframes pop {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 1;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .main-container {
+        padding: 4px;
+        width: 100%;
+        max-width: none;
+        border-radius: 4px;
+        border: 1px solid #333;
+    }
+
+    .headers {
+        gap: 4px;
+        margin-bottom: 4px;
+    }
+
+    .headers .b-header,
+    .headers .i-header,
+    .headers .n-header,
+    .headers .g-header,
+    .headers .o-header {
+        width: 100%;
+        font-size: 32px;
+        border-radius: 4px;
+        width: 100%;
+        aspect-ratio: 1;
+        border: 1px solid #333;
+    }
+
+    .bingo-board {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: repeat(5, 1fr);
+        gap: 4px;
+        width: 100%;
+        aspect-ratio: 1;
+    }
+
+    .bingo-board div {
+        font-size: 24px;
+        border-radius: 4px;
+        border: 1px solid #333
+    }
+
+    #resetBtn {
+        padding: 8px;
+        font-size: 16px;
+        margin-top: 4px;
+        border: 1px solid #333;
+    }
+
+    .free-space img.logo-img {
+        border-radius: 4px;
+    }
+
+    #winMessage {
+        font-size: 16px;
+        border: 1px solid #333;
+        padding: 8px;
+        margin-top: 4px;
+    }
+}

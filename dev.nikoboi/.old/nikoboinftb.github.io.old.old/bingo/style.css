@@ -1,0 +1,117 @@
+:root {
+  --scale: 1.25;
+  --gap: calc(12px * var(--scale));
+  --primary-color: #3366cc;
+  --bg-color: #181818;
+  --text-color: #ffffff;
+  --link-bg: #222;
+  --link-hover: #002F6C;
+  --icon-filter: invert(1) brightness(2);
+}
+
+body {
+  background-color: #000;
+  color: var(--text-color);
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: calc(16px * var(--scale));
+  text-align: center;
+  font-size: calc(16px * var(--scale));
+  box-sizing: border-box;
+}
+
+.link-div {
+  background-color: var(--bg-color);
+  width: 50%;
+  max-width: 1000px;
+  border-radius: calc(12px * var(--scale));
+  padding: var(--gap);
+  box-sizing: border-box;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+  box-shadow: 0 0 calc(16px * var(--scale)) rgba(0, 0, 0, 0.4);
+}
+
+.link-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: calc(12px * var(--scale));
+  padding: calc(14px * var(--scale)) calc(20px * var(--scale));
+  background-color: var(--link-bg);
+  color: var(--text-color);
+  border: 1px solid #333;
+  border-radius: calc(8px * var(--scale));
+  text-decoration: none;
+  font-size: calc(16px * var(--scale));
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.link-box:hover {
+  background-color: var(--link-hover);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+img.icon {
+  width: calc(28px * var(--scale));
+  height: calc(28px * var(--scale));
+  vertical-align: middle;
+}
+
+.image-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 24px;
+}
+
+img.profile {
+  width: calc(96px * var(--scale));
+  height: calc(96px * var(--scale));
+  border: calc(2px * var(--scale)) solid #444;
+  border-radius: 50%;
+}
+
+.notice {
+  font-size: calc(16px * var(--scale));
+  margin-top: calc(24px * var(--scale));
+  color: #ccc;
+}
+
+.notice a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.notice a:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 480px) {
+  .link-div {
+    width: 100%;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .link-box {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  img.profile {
+    width: 80px;
+    height: 80px;
+  }
+}

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bingo | Nikoboi</title>
+    <link rel="icon" type="image/svg" href="../../assets/fin-circle.svg">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <script defer src="script.js"></script>
+</head>
+
+<body>
+    <div class="main-container">
+
+        <div class="bingo-container">
+
+            <div class="headers">
+                <div class="b-header">B</div>
+                <div class="i-header">I</div>
+                <div class="n-header">N</div>
+                <div class="g-header">G</div>
+                <div class="o-header">O</div>
+            </div>
+
+            <div class="bingo-board">
+
+                <div id="B1"></div>
+                <div id="I1"></div>
+                <div id="N1"></div>
+                <div id="G1"></div>
+                <div id="O1"></div>
+
+                <div id="B2"></div>
+                <div id="I2"></div>
+                <div id="N2"></div>
+                <div id="G2"></div>
+                <div id="O2"></div>
+
+                <div id="B3"></div>
+                <div id="I3"></div>
+                <div id="N3" class="free-space marked">
+                    <img class="logo-img" src="../../assets/fin-square.svg" alt="logo">
+                </div>
+                <div id="G3"></div>
+                <div id="O3"></div>
+
+                <div id="B4"></div>
+                <div id="I4"></div>
+                <div id="N4"></div>
+                <div id="G4"></div>
+                <div id="O4"></div>
+
+                <div id="B5"></div>
+                <div id="I5"></div>
+                <div id="N5"></div>
+                <div id="G5"></div>
+                <div id="O5"></div>
+
+            </div>
+
+            <div id="winMessage"></div>
+
+            <button id="resetBtn">Reset</button>
+
+        </div>
+
+    </div>
+</body>
+
+</html>
