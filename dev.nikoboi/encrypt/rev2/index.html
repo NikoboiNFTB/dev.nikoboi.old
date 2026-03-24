@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Local AES Encrypt/Decrypt</title>
+<style>
+body { font-family: sans-serif; max-width: 600px; margin: 40px auto; }
+textarea, input { width: 100%; margin: 5px 0; }
+button { margin: 5px 5px 5px 0; }
+</style>
+</head>
+<body>
+<h2>Local AES Encrypt/Decrypt</h2>
+
+<label>Message:</label>
+<textarea id="message" rows="4"></textarea>
+
+<label>Password:</label>
+<input type="password" id="password">
+
+<button onclick="encryptMessage()">Encrypt</button>
+<button onclick="decryptMessage()">Decrypt</button>
+
+<label>Output:</label>
+<textarea id="output" rows="4" readonly></textarea>
+
+<script>
+async function getKey(password, salt) {
+    const enc = new TextEncoder();
+    const keyMaterial = await crypto.subtle.importKey(
+        "raw", enc.encode(password), {name: "PBKDF2"}, false, ["deriveKey"]
+    );
+    return crypto.subtle.deriveKey(
+        {name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256"},
+        keyMaterial,
+        {name: "AES-GCM", length: 256},
+        false,
+        ["encrypt", "decrypt"]
+    );
+}
+
+async function encryptMessage() {
+    const message = document.getElementById("message").value;
+    const password = document.getElementById("password").value;
+    if (!message || !password) return alert("Enter both message and password");
+
+    const enc = new TextEncoder();
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const key = await getKey(password, salt);
+
+    const ciphertext = await crypto.subtle.encrypt(
+        {name: "AES-GCM", iv: iv},
+        key,
+        enc.encode(message)
+    );
+
+    // Combine salt + iv + ciphertext for easy storage
+    const combined = new Uint8Array(salt.length + iv.length + ciphertext.byteLength);
+    combined.set(salt, 0);
+    combined.set(iv, salt.length);
+    combined.set(new Uint8Array(ciphertext), salt.length + iv.length);
+
+    document.getElementById("output").value = btoa(String.fromCharCode(...combined));
+}
+
+async function decryptMessage() {
+    const password = document.getElementById("password").value;
+    const input = document.getElementById("output").value;
+    if (!input || !password) return alert("Enter both password and ciphertext");
+
+    try {
+        const combined = Uint8Array.from(atob(input), c => c.charCodeAt(0));
+        const salt = combined.slice(0, 16);
+        const iv = combined.slice(16, 28);
+        const data = combined.slice(28);
+
+        const key = await getKey(password, salt);
+        const dec = await crypto.subtle.decrypt({name: "AES-GCM", iv: iv}, key, data);
+        document.getElementById("output").value = new TextDecoder().decode(dec);
+    } catch (e) {
+        alert("Decryption failed. Wrong password or corrupted data.");
+    }
+}
+</script>
+</body>
+</html>

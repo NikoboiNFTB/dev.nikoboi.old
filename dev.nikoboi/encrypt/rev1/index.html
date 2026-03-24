@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Password encrypt/decrypt — local only</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body{font-family:system-ui,Segoe UI,Helvetica,Arial;max-width:720px;margin:24px auto;padding:12px}
+    textarea,input{width:100%;box-sizing:border-box;margin:6px 0;padding:8px}
+    label{font-weight:600;margin-top:8px;display:block}
+    button{margin:6px 6px 6px 0;padding:8px 12px}
+    .row{display:flex;gap:8px;flex-wrap:wrap}
+    .small{width:120px}
+  </style>
+</head>
+<body>
+  <h2>Local password encrypt / decrypt</h2>
+
+  <label>Plaintext</label>
+  <textarea id="plain" rows="6" placeholder="Type message to encrypt"></textarea>
+
+  <label>Password</label>
+  <input id="pwd" type="password" placeholder="Enter password">
+
+  <div class="row">
+    <button id="enc">Encrypt → output</button>
+    <button id="dec">Decrypt input → plaintext</button>
+    <button id="copy">Copy output</button>
+    <button id="clear">Clear</button>
+  </div>
+
+  <label>Input / Output (base64 blob for encrypted data)</label>
+  <textarea id="out" rows="6" placeholder="Encrypted output or paste blob here"></textarea>
+
+  <script>
+  // --- crypto params ---
+  const SALT_LEN = 16;    // bytes
+  const IV_LEN   = 12;    // bytes for AES-GCM
+  const ITER     = 200000; // PBKDF2 iterations (trade-off: security vs speed)
+  const KEY_LEN  = 256;   // bits AES-GCM
+
+  // helpers
+  const enc = new TextEncoder();
+  const dec = new TextDecoder();
+
+  function abToB64(buf){
+    let bin = '';
+    const bytes = new Uint8Array(buf);
+    const chunk = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunk) {
+      bin += String.fromCharCode.apply(null, bytes.subarray(i, i + chunk));
+    }
+    return btoa(bin);
+  }
+  function b64ToAb(b64){
+    const bin = atob(b64);
+    const len = bin.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) bytes[i] = bin.charCodeAt(i);
+    return bytes.buffer;
+  }
+
+  async function deriveKey(password, salt){
+    const pwKey = await crypto.subtle.importKey(
+      'raw',
+      enc.encode(password),
+      { name: 'PBKDF2' },
+      false,
+      ['deriveKey']
+    );
+    return crypto.subtle.deriveKey(
+      {
+        name: 'PBKDF2',
+        salt,
+        iterations: ITER,
+        hash: 'SHA-256'
+      },
+      pwKey,
+      { name: 'AES-GCM', length: KEY_LEN },
+      false,
+      ['encrypt','decrypt']
+    );
+  }
+
+  async function encryptMessage(plaintext, password){
+    const salt = crypto.getRandomValues(new Uint8Array(SALT_LEN));
+    const iv   = crypto.getRandomValues(new Uint8Array(IV_LEN));
+    const key  = await deriveKey(password, salt.buffer);
+    const ct   = await crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv },
+      key,
+      enc.encode(plaintext)
+    );
+    // output = base64( salt || iv || ciphertext )
+    const outBuf = new Uint8Array(SALT_LEN + IV_LEN + ct.byteLength);
+    outBuf.set(salt, 0);
+    outBuf.set(iv, SALT_LEN);
+    outBuf.set(new Uint8Array(ct), SALT_LEN + IV_LEN);
+    return abToB64(outBuf.buffer);
+  }
+
+  async function decryptMessage(b64blob, password){
+    const buf = new Uint8Array(b64ToAb(b64blob));
+    if (buf.length < SALT_LEN + IV_LEN + 1) throw new Error('Input too short');
+    const salt = buf.slice(0, SALT_LEN).buffer;
+    const iv   = buf.slice(SALT_LEN, SALT_LEN + IV_LEN);
+    const ct   = buf.slice(SALT_LEN + IV_LEN).buffer;
+    const key  = await deriveKey(password, salt);
+    const plainBuf = await crypto.subtle.decrypt(
+      { name: 'AES-GCM', iv },
+      key,
+      ct
+    );
+    return dec.decode(plainBuf);
+  }
+
+  // UI wiring
+  document.getElementById('enc').addEventListener('click', async () => {
+    const text = document.getElementById('plain').value;
+    const pwd  = document.getElementById('pwd').value;
+    if (!text) return alert('Plaintext empty');
+    if (!pwd) return alert('Password empty');
+    try {
+      const out = await encryptMessage(text, pwd);
+      document.getElementById('out').value = out;
+      // optionally clear plaintext for hygiene: (commented)
+      // document.getElementById('plain').value = '';
+    } catch (e) {
+      alert('Encrypt error: ' + e.message);
+    }
+  });
+
+  document.getElementById('dec').addEventListener('click', async () => {
+    const blob = document.getElementById('out').value.trim();
+    const pwd  = document.getElementById('pwd').value;
+    if (!blob) return alert('No input blob to decrypt');
+    if (!pwd)  return alert('Password empty');
+    try {
+      const plain = await decryptMessage(blob, pwd);
+      document.getElementById('plain').value = plain;
+    } catch (e) {
+      alert('Decrypt failed (bad password or corrupted data).');
+    }
+  });
+
+  document.getElementById('copy').addEventListener('click', () => {
+    const v = document.getElementById('out').value;
+    if (!v) return;
+    navigator.clipboard?.writeText(v).then(()=>{},()=>alert('Copy failed'));
+  });
+
+  document.getElementById('clear').addEventListener('click', () => {
+    document.getElementById('plain').value = '';
+    document.getElementById('out').value = '';
+    document.getElementById('pwd').value = '';
+  });
+
+  </script>
+</body>
+</html>
