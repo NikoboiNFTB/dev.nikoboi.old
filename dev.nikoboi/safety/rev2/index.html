@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Userscript Safety Guide | Nikoboi</title>
+    <link rel="icon" type="image/png" href="../assets/clippy.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Userscript Safety Guide</h1>
+        <p>Userscripts can enhance your browsing experience, but they come with risks. Here's how to verify the safety
+            of a script before using it.</p>
+
+        <h2>Methods to Verify Userscript Safety</h2>
+
+        <h3>1. Review the Source Code</h3>
+        <p>Inspect the source code for suspicious activities like network requests, excessive permissions, or
+            obfuscation. Common red flags include:</p>
+        <ul>
+            <li>Network calls (e.g., <code>XMLHttpRequest</code>, <code>fetch</code>)</li>
+            <li>Accessing sensitive data (e.g., <code>document.cookie</code>, <code>localStorage</code>)</li>
+            <li>Obfuscated code</li>
+        </ul>
+        <p>However, this can be quite difficult to do without having extensive JavaScript knowledge already.</p>
+
+        <h3>2. Use the Tampermonkey Script Security Analyzer</h3>
+        <p>The <a href="https://ilyaxuwu.github.io/tampermonkey/analyze.html" target="_blank">Tampermonkey Userscript
+                Analyzer</a> by Liyaa (Ilyax) detects potentially dangerous patterns in the script, like API calls or
+            <b>eval()</b> usage. It's not a foolproof solution but can help identify the most common red flags.
+        </p>
+        <ul>
+            <li><b>Note:</b> It only detects known risky patterns and doesn't analyze the script's logic.</li>
+        </ul>
+
+        <h3>3. Leverage AI for Script Analysis</h3>
+        <p>AI can help spot potential issues in short to medium-length scripts, but it's not perfect. Always
+            double-check the results with manual inspection.</p>
+        <p>Unless you know JavaScript, an LLM is likely your best bet to analyze a scripts behavior. JavaScript is a
+            well-documented and a commonly used scripting language. An AI model such as GPT-4 should have no issues
+            analyzing the contents of the script.</p>
+
+        <h3>4. Check Ratings, Reviews, and Updates</h3>
+        <p>Scripts with positive ratings and recent updates are generally safer. Be cautious of scripts that lack
+            documentation or have minimal details, as these could be malicious.</p>
+
+        <h3>5. Test in a Controlled Environment (Optional)</h3>
+        <p>Testing a script in a sandbox or virtual machine can help isolate any risks without affecting your main
+            system. However, this is not a foolproof method, and may require additional steps like monitoring network
+            activity and console logs. For most users, reviewing the script's code directly is simpler and more
+            effective than setting up a controlled environment.</p>
+
+        <h3>6. Monitor the Script’s Behavior</h3>
+        <p>After installation, keep an eye on the script's behavior. If your browser slows down or you notice abnormal
+            behavior, it may indicate a security issue. (Or just a poorly programmed script.)</p>
+    </div>
+</body>
+
+</html>

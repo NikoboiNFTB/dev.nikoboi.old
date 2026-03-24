@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Userscript Safety Guide | Nikoboi</title>
+    <link rel="icon" type="image/png" href="../assets/clippy.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Userscript Safety Guide</h1>
+
+        <h2>
+            Introduction
+        </h2>
+
+        <p>
+            Userscripts are powerful tools that can enhance websites, automate tasks, or add extra features. But they
+            run directly in your browser, on every site they're allowed on. That's why it’s important to make sure
+            they’re safe, especially if you don’t know how to read code yourself. This guide focuses on practical steps
+            anyone can follow, without requiring programming knowledge.
+        </p>
+
+        <h2>
+            What Makes a Userscript Unsafe?
+        </h2>
+
+        <p>
+            Spotting an unsafe userscript can be difficult, but here are a few of the most common features of malicious
+            scripts:
+        </p>
+
+        <ul>
+            <li>Scripts that send data to servers.</li>
+            <ul>
+                <li>Scripts should always run locally, they have no business phoning anything or anyone.</li>
+            </ul>
+            <li>Scripts that run on far more sites than necessary.</li>
+            <ul>
+                <li>If a site runs on more sites that it should, that's suspicious.</li>
+            </ul>
+            <li>Scripts that include external files from suspicious URLs.</li>
+            <ul>
+                <li>A scritp should always be self container. It should never import any external code.</li>
+            </ul>
+            <li>Scripts that are heavily obfuscated or unreadable.</li>
+            <ul>
+                <li>A safe script should have nothing to hide. Obfuscated code is a huge red flag.</li>
+            </ul>
+        </ul>
+
+        <h2>
+            How to Identify a Safe Userscript (Beginner-Friendly Steps)
+        </h2>
+
+        <p>
+            You don’t need to understand JavaScript to check a script. Here are practical actions anyone can take:
+        </p>
+
+        <ul>
+            <li>
+                <b>Check the script’s source page:</b>
+                <ul>
+                    <li>Trusted repositories (GreasyFork, OpenUserJS) show ratings, comments, and update history. Avoid
+                        scripts with unclear descriptions or no community feedback.</li>
+            </li>
+            </li>
+        </ul>
+        </li>
+
+        <li>
+            <b>Look at the “@match” and “@include” lines:</b>
+            <ul>
+                <li>These tell you which sites the script will run on.
+                    A YouTube script should only run on YouTube.
+                    If it runs on “*://*/*” (every site), be cautious.</li>
+            </ul>
+        </li>
+
+        <li>
+            <b>Check “@require” and external URLs:</b>
+            <ul>
+                <li>If a script loads code from another website, that's quite a red flag, since you can't directly read
+                    that part of the code.</li>
+            </ul>
+        </li>
+
+        <li>
+            <b>Check who the author is:</b>
+            <ul>
+                <li>Scripts from established authors with consistent update history are generally safer.</li>
+            </ul>
+        </li>
+        </ul>
+
+        <h2 id="tools">Tools for Checking Userscripts (No Coding Knowledge Required)</h2>
+
+
+        <p>
+            None of the above are very useful to a non-programmer. How would you know what obfuscation or external files look like?
+        </p>
+        <p>
+            Here are a couple of tools that anyone can use to find out what a userscript does:
+        </p>
+
+        <ul>
+            <li>
+                <b>Ilyax's Userscript Analyzer</b>:
+                <p>A beginner-friendly tool that highlights permissions, external requests, and potential risks.</p>
+                <ul>
+                    <li>Created by <i>Liyaa (Ilyax)</i>.</li>
+                    <li>You can analyze a script <a
+                            href="https://ilyaxuwu.github.io/tampermonkey/analyze.html">here</a>.</li>
+                </ul>
+            </li>
+            <li>
+                <b>Ask an AI Model</b>:
+                <p>Short or medium-sized scripts can be pasted into an AI assistant to explain what they do in plain
+                    language. Models that are particularly strong at explaining JavaScript include:</p>
+                <ul>
+                    <li>ChatGPT (especially GPT-4 or later)</li>
+                    <li>Claude</li>
+                    <li>Open-source models like Llama 3.1 (for simple scripts)</li>
+                </ul>
+
+            </li>
+        </ul>
+
+        <p>
+            These tools let you safely preview the behavior of a script before installation.
+        </p>
+
+
+        <h2>
+            Recommended Userscript Managers
+        </h2>
+
+        <p>
+            Your userscript manager is your first line of defense. Choose one that is transparent and safe:
+        </p>
+
+        <ul>
+            <li>
+                <b>Violentmonkey (recommended)</b>:
+                <p>open-source, privacy-friendly, and available on Firefox
+                    <s class="tooltip">and Chromium
+                        <span class="tooltiptext">
+                            Chromium browsers no longer support Violentmonkey, in their <a
+                                href="https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3"
+                                target="_blank">Perennial Quest against user freedom and safety</a>. The same Manifest
+                            V3 also killed uBlock Origin, the most popular ad-blocker for the web.
+                        </span>
+                    </s>.
+                    It also makes permission review and version control very clear.
+                </p>
+            </li>
+            <li>
+                <b>Tampermonkey</b>:
+                <p>The only popular userscript manager still available on Chromium-based browsers. It is proprietary but
+                    feature-rich. If you're on Chrome/Edge/Brave, it's a common choice, but review permissions
+                    carefully.
+                </p>
+            </li>
+        </ul>
+
+        <p>
+            For maximum safety, Firefox + Violentmonkey is an excellent combination.
+        </p>
+
+        <h2>
+            Safe Installation & Update Practices
+        </h2>
+
+        <p>
+            A few simple habits can keep you safe when using userscripts:
+        </p>
+
+        <ul>
+            <li>
+                <b>Install thoughtfully:</b>
+                <p>Even for fun scripts, check them with an analyzer or AI tool first
+                    (see <a href="#tools">Tools for Checking Userscripts</a>).</p>
+            </li>
+
+            <li>
+                <b>Keep your userscript manager updated:</b>
+                <p>This ensures security patches are applied. Firefox + Violentmonkey is the recommended combination;
+                    Tampermonkey is required for Chromium.</p>
+            </li>
+
+            <li>
+                <b>Review permissions after updates:</b>
+                <p>Make sure the script hasn’t added new sites or external files
+                    unexpectedly.</p>
+            </li>
+
+            <li>
+                <b>Disable auto-updates for trusted scripts if desired:</b>
+                <p>Only necessary if you want to prevent
+                    unexpected changes.</p>
+            </li>
+        </ul>
+        <h2>
+            Final Thoughts
+        </h2>
+
+        <p>
+            Userscripts are powerful, fun, and incredibly customizable. With a few simple habits, checking
+            permissions, scanning scripts with user friendly tools, using trusted managers, and monitoring updates, you
+            can enjoy userscripts confidently and safely, even without coding experience.
+        </p>
+
+    </div>
+
+</body>
+
+</html>

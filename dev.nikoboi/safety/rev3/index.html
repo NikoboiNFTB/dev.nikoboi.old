@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Userscript Safety Guide | Nikoboi</title>
+    <link rel="icon" type="image/png" href="../assets/clippy.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <h1>Userscript Safety Guide</h1>
+        
+        <p>Userscripts are great for customizing your browsing experience, but it's important to make sure they're safe before installing them. This guide will walk you through easy steps to verify a script's safety. We'll also include some optional extra steps for advanced users who want to dig deeper.</p>
+
+        <h2>1. Understanding the Basics of Userscripts</h2>
+
+        <p>Userscripts are relatively small pieces of code that can change the way websites behave. They run directly in your browser and can automate tasks, add features of strip away unwanted features.</p>
+
+        <p><b>Why Safety Matters:</b><br>Since userscripts have access to your browsing activity, a malicious script can potentially steal your data or cause other issues. We’ll go over how to spot potentially unsafe scripts and keep your browser secure.</p>
+
+        <h2>2. Quick Safety Check (For Regular Users)</h2>
+        <p>You don’t need to know programming to check if a userscript is safe. Here are simple steps you can follow:</p>
+
+        <h3>Check the Source of the Script</h3>
+        <p><b>Where did it come from?</b><br>Use trusted websites like <b>GreasyFork</b> or <b>OpenUserJS</b> to find userscripts. These sites offer ratings, reviews, and a history of updates.</p>
+        <p><b>Why?</b><br>Scripts from reputable sources are more likely to be safe because they have a community watching for issues.</p>
+        <p><b>GitHub</b> <i>can</i> be a good source, but it has no safety or security checks whatsoever. The biggest perk of GitHub is its transparency.</p>
+
+        <h3>Look at Script Permissions</h3>
+        <p><b>What sites does the script run on?</b><br>Check the <code>@match</code> or <code>@include</code> lines in the script. If it says <code>*://*/*</code> (every website), that’s a red flag. A script for YouTube should only run on YouTube, not everywhere.</p>
+
+        <h3>Avoid External Code</h3>
+        <p><b>Does the script load files from other websites?</b><br>If the script loads code from random or suspicious URLs, it could be risky. A good script should be self-contained.</p>
+
+        <h3>Check for Reviews and Updates</h3>
+        <p><b>Are there reviews?</b><br>Check the ratings and feedback from other users. If a script has been updated recently and has positive reviews, it’s a good sign.</p>
+
+        <h3>Use Tools to Analyze the Script</h3>
+        <p><b>Quick Tool:</b><br>Use the <a href="https://ilyaxuwu.github.io/tampermonkey/analyze.html" target="_blank"><b>Tampermonkey Script Security Analyzer</b></a>. Just paste the script's code into the analyzer, and it will highlight risky things like network calls or <code>eval()</code> usage.</p>
+        <p><b>Why?</b><br>It helps spot common red flags like network requests that could send your data somewhere.</p>
+
+        <h2>3. Extra Safety Tips (For Regular Users)</h2>
+        <p>These are simple habits to ensure your userscript experience is as safe as possible:</p>
+
+        <h3>Install Carefully</h3>
+        <p><b>Check the script before installing.</b><br>Even if it’s from a trusted site, it’s worth using the analyzer or reviewing the script’s description to see if it’s doing anything suspicious.</p>
+
+        <h3>Keep Your Userscript Manager Updated</h3>
+        <p><b>Stay updated!</b><br>Make sure your userscript manager (like <b>Violentmonkey</b> or <b>Tampermonkey</b>) is up-to-date. This helps ensure security patches are applied.</p>
+
+        <h3>Review Permissions After Updates</h3>
+        <p><b>After an update, double-check.</b><br>When a script updates, check if it’s now running on more sites or loading more external code. If it looks different, it’s worth reviewing it again.</p>
+
+        <h2>4. Advanced Safety Checks (For Power Users)</h2>
+        <p>For those who want to dive deeper into script security, here are some <b>extra steps</b> to make sure the script is doing exactly what you want:</p>
+
+        <h3>Manually Inspect the Code</h3>
+        <p><b>Look for Risky Patterns:</b><br> 
+        <ul>
+            <li><b>Network Requests:</b> Scripts that send data (using <code>fetch</code>, <code>XMLHttpRequest</code>, or similar) could be uploading your data.</li>
+            <li><b>Obfuscated Code:</b> If the code is hard to read or uses <code>eval()</code> or <code>setTimeout()</code> with encoded strings, it’s probably hiding something.</li>
+            <li><b>Sensitive Data:</b> Watch out for scripts that access <code>document.cookie</code>, <code>localStorage</code>, or other private info.</li>
+        </ul>
+        <p><b>Why?</b><br>By looking at these patterns, you can spot if the script is doing something dangerous.</p>
+
+        <h3>Test in a Sandbox or Virtual Machine</h3>
+        <p><b>Advanced option:</b><br>You can test userscripts in a sandbox or virtual machine to isolate potential risks. This method is more complicated but ensures nothing harmful affects your main system.</p>
+        <p><b>Why?</b><br>It allows you to run the script in a controlled environment and monitor for any suspicious activity like unexpected network requests.</p>
+
+        <h3>Monitor the Script’s Behavior</h3>
+        <p><b>After installing, keep an eye on the script.</b><br>If your browser starts acting slow, or if you notice abnormal behavior (like new toolbars or popups), the script may be doing something it shouldn’t.</p>
+        <p><b>Why?</b><br>Abnormal behavior might indicate that a script is doing more than it’s supposed to.</p>
+
+        <h2>5. Recommended Tools for Analyzing Userscripts</h2>
+
+        <p>Here are some tools that can help you easily analyze userscripts:</p>
+        <ul>
+            <li><b><a href="https://ilyaxuwu.github.io/tampermonkey/analyze.html" target="_blank">Tampermonkey Script Analyzer</a></b>: This tool helps you quickly find risky patterns in scripts without needing to read the code.</li>
+            <li><b>AI Assistance (Optional):</b><br>You can paste short to medium-length scripts into AI tools like <b>ChatGPT</b> or <b>Claude</b> to help explain what the script does in plain language. This is useful for understanding what the code is really doing.</li>
+        </ul>
+
+        <h2>6. Best Practices for Safe Script Management</h2>
+
+        <h3>Use a Good Userscript Manager</h3>
+        <p><b>Violentmonkey (Recommended):</b><br>Open-source, privacy-friendly, and available on Firefox. It’s great for beginners and experts alike.</p>
+        <p><b>Tampermonkey:</b><br>The only popular userscript manager available on Chromium-based browsers. It’s feature-rich but proprietary. Always review the permissions carefully.</p>
+        <p><b>Tip:</b><br>For maximum safety, use <b>Firefox</b> with <b>Violentmonkey</b>. For Chromium browsers, <b>Tampermonkey</b> is your best option.</p>
+
+        <h3>Be Cautious with Auto-Updates</h3>
+        <p><b>Disable Auto-Updates (Optional):</b><br>If you trust a script, you can disable auto-updates to prevent unexpected changes. Just make sure to manually review it every now and then.</p>
+
+        <h2>7. Final Thoughts</h2>
+
+        <p>Userscripts can be an awesome way to customize your browsing experience, but <b>safety is key</b>. By following the simple checks and using tools like the Tampermonkey Script Analyzer, you can ensure that the scripts you install are safe. And if you're more experienced, you can dive deeper into inspecting the code and testing scripts in controlled environments.</p>
+
+        <p>With a little caution, you can enjoy all the benefits of userscripts without the risk!</p>
+
+        <h3>Quick Recap:</h3>
+        <ul>
+            <li><b>For regular users:</b> Stick to trusted sources, check permissions, and use the <b>Tampermonkey Script Analyzer</b>.</li>
+            <li><b>For advanced users:</b> Inspect code manually, test in a sandbox, and monitor the script's behavior after installation.</li>
+            <li>Keep your userscript manager updated and review permissions after updates.</li>
+        </ul>
+
+        <p>Stay safe and enjoy your enhanced browsing experience! 😊</p>
+
+    </div>
+</body>
+
+</html>
