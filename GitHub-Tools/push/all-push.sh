@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 for d in */; do
-    (cd "$d" && ./push.sh) &
+	(cd "$d" && ./push.sh) &
 done
 
 wait

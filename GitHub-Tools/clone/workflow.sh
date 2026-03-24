@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
 
 repos=(
-  ChatGPT-Tweaks
-  FreeCAD-Python
-  GitHub-Tools
-  ilyaxuwu.github.io
-  IMDb-RePo
-  Metal-Archives-Tweaks
-  Minecraft
-  MySpicetifyTheme
-  nikoboinftb.github.io
-  Search-on-GTACars
-  SearchWith
-  Songsterr-Tweaks
-  TikTok-Tools
-  TMDB-RePo
-  website-to-apk
-  YouTube-Tweaks
+	ChatGPT-Tweaks
+	FreeCAD-Python
+	GitHub-Tools
+	ilyaxuwu.github.io
+	IMDb-RePo
+	Metal-Archives-Tweaks
+	Minecraft
+	MySpicetifyTheme
+	nikoboinftb.github.io
+	Search-on-GTACars
+	SearchWith
+	Songsterr-Tweaks
+	TikTok-Tools
+	TMDB-RePo
+	website-to-apk
+	YouTube-Tweaks
 )
 
 echo "Creating directory..."
@@ -26,8 +26,8 @@ echo "Directory created"
 
 echo "Cloning repositories..."
 for repo in "${repos[@]}"; do
-  echo "Cloning $repo..."
-  git clone "https://github.com/NikoboiNFTB/$repo" > /dev/null 2>&1 &
+	echo "Cloning $repo..."
+	git clone "https://github.com/NikoboiNFTB/$repo" >/dev/null 2>&1 &
 done
 
 wait

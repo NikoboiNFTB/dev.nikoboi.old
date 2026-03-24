@@ -3,7 +3,7 @@
 set -e
 
 for d in */; do
-    ( cd "$d" && git add . && git status ) &
+	(cd "$d" && git add . && git status) &
 done
 
 wait

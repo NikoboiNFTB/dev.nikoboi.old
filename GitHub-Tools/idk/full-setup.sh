@@ -18,30 +18,30 @@
 author="NikoboiNFTB"
 
 repos=(
-  ChatGPT-Tweaks
-  FreeCAD-Python
-  GitHub-Tweaks
-  ilyaxuwu.github.io
-  IMDb-RePo
-  Metal-Archives-Tweaks
-  Minecraft
-  MySpicetifyTheme
-  nikoboinftb.github.io
-  Search-on-GTACars
-  SearchWith
-  Songsterr-Tweaks
-  TikTok-Tools
-  TMDB-RePo
-  website-to-apk
-  YouTube-Tweaks
+	ChatGPT-Tweaks
+	FreeCAD-Python
+	GitHub-Tweaks
+	ilyaxuwu.github.io
+	IMDb-RePo
+	Metal-Archives-Tweaks
+	Minecraft
+	MySpicetifyTheme
+	nikoboinftb.github.io
+	Search-on-GTACars
+	SearchWith
+	Songsterr-Tweaks
+	TikTok-Tools
+	TMDB-RePo
+	website-to-apk
+	YouTube-Tweaks
 )
 
 mkdir -p "$author"
 cd "$author" || exit 1
 
 for repo in "${repos[@]}"; do
-  echo "Cloning $repo..."
-  git clone "git@github.com:$author/$repo.git" &
+	echo "Cloning $repo..."
+	git clone "git@github.com:$author/$repo.git" &
 done
 
 wait

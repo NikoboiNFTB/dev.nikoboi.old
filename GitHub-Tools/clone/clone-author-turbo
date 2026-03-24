@@ -5,26 +5,32 @@ set -e
 author="$1"
 
 if [ -z "$author" ]; then
-    read -rp "Enter GitHub username of target: " author
+	read -rp "Enter GitHub username of target: " author
 fi
-[ -z "$author" ] && { echo "No username entered. Exiting."; exit 1; }
+[ -z "$author" ] && {
+	echo "No username entered. Exiting."
+	exit 1
+}
 
 read -rp "SSH or HTTPS (if unsure, type HTTPS or hit Enter): " method
 method=$(echo "$method" | tr '[:upper:]' '[:lower:]')
 
 if [[ "$method" == "ssh" ]]; then
-    clone_prefix="git@github.com:$author"
-    method="ssh"
+	clone_prefix="git@github.com:$author"
+	method="ssh"
 else
-    clone_prefix="https://github.com/$author"
-    method="https"
+	clone_prefix="https://github.com/$author"
+	method="https"
 fi
 
 echo "Fetching repo list for $author..."
-repos=$(curl -s "https://api.github.com/users/$author/repos?per_page=200" \
-        | jq -r '.[].name')
+repos=$(curl -s "https://api.github.com/users/$author/repos?per_page=200" |
+	jq -r '.[].name')
 
-[ -z "$repos" ] && { echo "No repositories found."; exit 1; }
+[ -z "$repos" ] && {
+	echo "No repositories found."
+	exit 1
+}
 
 mkdir -p "$author"
 cd "$author" || exit 1
@@ -58,13 +64,13 @@ echo "Done!"
 KEEP_OPEN=true
 
 if [ "$KEEP_OPEN" = true ]; then
-    echo
-    read -p "Press 'Enter' to exit / Type 'disable' to disable hanging: " response
-    if [ "$response" = "disable" ]; then
-        sed -i 's/^KEEP_OPEN=true/KEEP_OPEN=false/' "$0"
-        echo
-        echo "KEEP_OPEN set to false"
-        echo "Change 'KEEP_OPEN=true' to enable"
-        sleep 4
-    fi
+	echo
+	read -p "Press 'Enter' to exit / Type 'disable' to disable hanging: " response
+	if [ "$response" = "disable" ]; then
+		sed -i 's/^KEEP_OPEN=true/KEEP_OPEN=false/' "$0"
+		echo
+		echo "KEEP_OPEN set to false"
+		echo "Change 'KEEP_OPEN=true' to enable"
+		sleep 4
+	fi
 fi

@@ -9,8 +9,8 @@ echo "Files downloaded"
 
 echo "Copying files..."
 for d in */; do
-    cp pull.sh "$d"
-    cp push.sh "$d"
+	cp pull.sh "$d"
+	cp push.sh "$d"
 done
 echo "All files copied"
 
