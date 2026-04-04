@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+
+set -e
+
+repos=()
+
+# Add repos
+for author in */; do
+	[ -d "$author" ] || continue
+	for repo in "$author"*/; do
+		if [ -d "$repo/.git" ]; then
+			repos+=("$repo")
+		fi
+	done
+done
+
+# Print that they're being pulled.
+for repo in "${repos[@]}"; do
+	echo "ℹ️  Pulling $repo"
+done
+
+echo
+
+# Pull
+for repo in "${repos[@]}"; do
+	(
+		cd "$repo" || exit 1
+
+		set +e
+		output=$(git pull 2>&1)
+		status=$?
+		set -e
+
+		if [ "$status" -eq 0 ]; then
+			if printf '%s\n' "$output" | grep -q "^Already up to date\."; then
+				echo "✅ Already up to date: $repo"
+			else
+				echo "✅ Successfully pulled $repo"
+			fi
+		else
+			echo "❌ Failed to pull $repo"
+			printf '%s\n' "$output"
+		fi
+	) &
+done
+
+wait
