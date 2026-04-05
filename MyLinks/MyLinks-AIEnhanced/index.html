@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Links - Nikoboi</title>
+<link href="fontawesome-free-7.0.1-web/css/all.min.css" rel="stylesheet">
+<style>
+  body {
+    background-color: #ffffff;
+    color: #003b5c;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    margin-bottom: 24px;
+    font-size: 2rem;
+    color: #003b5c;
+    text-align: center;
+  }
+
+  .links-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .link-box {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px;
+    background-color: #006db6;
+    color: #ffffff;
+    border-radius: 12px;
+    font-size: 1.25rem;
+    text-decoration: none;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: all 0.25s ease;
+    justify-content: center;
+    text-align: center;
+    word-wrap: break-word;
+  }
+
+  .link-box i {
+    font-size: 1.5rem;
+  }
+
+  .link-box:hover {
+    background-color: #003b5c;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+  }
+
+  .image-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 32px 0 0 0;
+  }
+
+  img {
+    width: 128px;
+    height: auto;
+    border-radius: 32px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease;
+  }
+
+  img:hover {
+    transform: rotate(-3deg) scale(1.05);
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 600px) {
+    .link-box {
+      font-size: 1.4rem;
+      padding: 24px;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #121212;
+      color: #e0e0e0;
+    }
+    h1 {
+      color: #e0e0e0;
+    }
+    a {
+      color: #80b4d8;
+    }
+    a:hover {
+      color: #d0e3f3;
+    }
+    .link-box {
+      background-color: #003b5c;
+    }
+    .link-box:hover {
+      background-color: #006db6;
+    }
+  }
+</style>
+</head>
+<body>
+  <h1>My Links</h1>
+  <div class="links-container">
+    <a href="https://discord.gg/C3fhKRtrh7" class="link-box" target="_blank">
+      <i class="fa-brands fa-discord"></i> Discord
+    </a>
+    <a href="https://github.com/NikoboiNFTB" class="link-box" target="_blank">
+      <i class="fa-brands fa-github"></i> GitHub
+    </a>
+    <a href="https://instagram.com/nikoboi" class="link-box" target="_blank">
+      <i class="fa-brands fa-instagram"></i> Instagram
+    </a>
+    <a href="https://www.reddit.com/user/FinGamer678Nikoboi/" class="link-box" target="_blank">
+      <i class="fa-brands fa-reddit"></i> Reddit
+    </a>
+    <a href="https://open.spotify.com/user/2fl81mu9nklhy99dhdih98ulp" class="link-box" target="_blank">
+      <i class="fa-brands fa-spotify"></i> Spotify
+    </a>
+    <a href="https://www.threads.com/@nikoboi" class="link-box" target="_blank">
+      <i class="fa-brands fa-threads"></i> Threads
+    </a>
+    <a href="https://www.tiktok.com/@www.nikoboi.fi" class="link-box" target="_blank">
+      <i class="fa-brands fa-tiktok"></i> TikTok
+    </a>
+    <a href="https://www.twitch.tv/fingamer678nftb" class="link-box" target="_blank">
+      <i class="fa-brands fa-twitch"></i> Twitch
+    </a>
+    <a href="https://x.com/fingamer678" class="link-box" target="_blank">
+      <i class="fa-brands fa-x-twitter"></i> Twitter
+    </a>
+    <a href="https://youtube.com/@NikoboiNFTB" class="link-box" target="_blank">
+      <i class="fa-brands fa-youtube"></i> YouTube
+    </a>
+    <a href="https://www.youtube.com/watch?v=2_Dtmpe9qaQ" class="link-box" target="_blank">
+      <i class="fa-brands fa-youtube"></i> Clippy
+    </a>
+  </div>
+  <div class="image-box">
+    <img src="images/clippy.jpg" alt="Clippy">
+  </div>
+</body>
+</html>

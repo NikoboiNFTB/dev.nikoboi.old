@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>111movies.com Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Optional: Add some custom scrollbar styling if desired for the iframe */
+        iframe {
+            border: none;
+            width: 100%;
+            height: 80vh; /* Adjust height as needed */
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 flex items-center justify-center min-h-screen p-4">
+
+    <div id="app-container" class="bg-gray-800 p-8 rounded-lg shadow-xl max-w-4xl w-full">
+        <h1 class="text-3xl font-bold text-center mb-6 text-blue-400">Loading...</h1>
+
+        <div id="movie-viewer" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-center">Movie Viewer</h2>
+            <p class="text-lg text-center mb-6">Redirecting you to the movie on 111movies.com. If the content below doesn't load, please click the link:</p>
+            <a id="movie-link" href="#" target="_blank" class="block text-center text-blue-400 hover:underline mb-6 text-lg">Click here to watch the movie</a>
+            <iframe id="movie-iframe" src="" allowfullscreen></iframe>
+        </div>
+
+        <div id="tv-viewer" class="hidden">
+            <h2 class="text-2xl font-semibold mb-4 text-center">TV Show Viewer</h2>
+            <div class="flex flex-wrap justify-center gap-4 mb-6">
+                <div>
+                    <label for="season-select" class="block text-sm font-medium text-gray-300 mb-1">Season:</label>
+                    <select id="season-select" class="block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></select>
+                </div>
+                <div>
+                    <label for="episode-select" class="block text-sm font-medium text-gray-300 mb-1">Episode:</label>
+                    <select id="episode-select" class="block w-full px-3 py-2 bg-gray-700 border border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></select>
+                </div>
+            </div>
+            <p class="text-lg text-center mb-6">If the content below doesn't load, please click the link:</p>
+            <a id="tv-link" href="#" target="_blank" class="block text-center text-blue-400 hover:underline mb-6 text-lg">Click here to watch this episode</a>
+            <iframe id="tv-iframe" src="" allowfullscreen></iframe>
+        </div>
+
+        <div id="error-section" class="hidden text-center text-red-400">
+            <h2 class="text-2xl font-semibold mb-4">Oops! Something went wrong.</h2>
+            <p>Could not find valid 'ttid' or 'type' in the URL.</p>
+            <p>Please ensure the URL is in the format: <br>
+               <code class="bg-gray-700 p-1 rounded">https://NikoboiNFTB.github.io/imdb-111movies-redirect/?ttid=tt1234567&type=movie</code> or <br>
+               <code class="bg-gray-700 p-1 rounded">https://NikoboiNFTB.github.io/imdb-111movies-redirect/?ttid=tt1234567&type=tv</code></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const ttid = params.get('ttid');
+            const type = params.get('type'); // 'movie' or 'tv'
+
+            const appTitle = document.querySelector('#app-container h1');
+            const movieViewer = document.getElementById('movie-viewer');
+            const tvViewer = document.getElementById('tv-viewer');
+            const errorSection = document.getElementById('error-section');
+
+            if (!ttid || (!type || (type !== 'movie' && type !== 'tv'))) {
+                appTitle.textContent = 'Error';
+                errorSection.classList.remove('hidden');
+                return; // Stop execution if parameters are invalid
+            }
+
+            appTitle.textContent = `Viewing ${ttid} as a ${type.toUpperCase()}`;
+
+            if (type === 'movie') {
+                movieViewer.classList.remove('hidden');
+                const movieLink = document.getElementById('movie-link');
+                const movieIframe = document.getElementById('movie-iframe');
+
+                const movieUrl = `https://111movies.com/movie/${ttid}`;
+                movieLink.href = movieUrl;
+                movieIframe.src = movieUrl;
+
+            } else if (type === 'tv') {
+                tvViewer.classList.remove('hidden');
+                const seasonSelect = document.getElementById('season-select');
+                const episodeSelect = document.getElementById('episode-select');
+                const tvLink = document.getElementById('tv-link');
+                const tvIframe = document.getElementById('tv-iframe');
+
+                // Populate Season and Episode dropdowns (1 to 64)
+                for (let i = 1; i <= 64; i++) {
+                    const seasonOption = document.createElement('option');
+                    seasonOption.value = i;
+                    seasonOption.textContent = `Season ${i}`;
+                    seasonSelect.appendChild(seasonOption);
+
+                    const episodeOption = document.createElement('option');
+                    episodeOption.value = i;
+                    episodeOption.textContent = `Episode ${i}`;
+                    episodeSelect.appendChild(episodeOption);
+                }
+
+                // Function to update the iframe and link
+                function updateTvViewer() {
+                    const selectedSeason = seasonSelect.value || 1; // Default to 1 if nothing selected
+                    const selectedEpisode = episodeSelect.value || 1; // Default to 1 if nothing selected
+                    const tvUrl = `https://111movies.com/tv/${ttid}/${selectedSeason}/${selectedEpisode}`;
+                    tvLink.href = tvUrl;
+                    tvIframe.src = tvUrl;
+                }
+
+                // Set initial values (e.g., Season 1, Episode 1)
+                seasonSelect.value = 1;
+                episodeSelect.value = 1;
+                updateTvViewer();
+
+                // Add event listeners for changes
+                seasonSelect.addEventListener('change', updateTvViewer);
+                episodeSelect.addEventListener('change', updateTvViewer);
+            }
+        });
+    </script>
+</body>
+</html>
