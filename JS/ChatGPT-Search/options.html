@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Manage Custom Search Engines</title>
+		<style>
+			body {
+				width: 300px;
+				padding: 10px;
+				font-family: Arial, sans-serif;
+			}
+			label {
+				display: block;
+				margin-top: 10px;
+			}
+			input,
+			button {
+				width: 100%;
+				padding: 8px;
+				margin: 5px 0;
+			}
+			.search-engine {
+				margin: 10px 0;
+				padding: 10px;
+				border: 1px solid #ccc;
+			}
+			.button-container {
+				display: flex;
+				justify-content: space-between;
+			}
+		</style>
+	</head>
+	<body>
+		<h3>Manage Search Engines</h3>
+		<form id="addSearchEngineForm">
+			<label for="name">Search Engine Name</label>
+			<input type="text" id="name" required placeholder="e.g., Google" />
+			<label for="urlTemplate">URL Template</label>
+			<input type="text" id="urlTemplate" required placeholder="e.g., https://www.google.com/search?q={query}" />
+			<label for="iconUrl">Icon URL (Optional)</label>
+			<input type="url" id="iconUrl" />
+			<button type="submit">Add Search Engine</button>
+		</form>
+		<h4>Existing Search Engines</h4>
+		<div id="searchEnginesList"></div>
+		<script src="options.js"></script>
+	</body>
+</html>
