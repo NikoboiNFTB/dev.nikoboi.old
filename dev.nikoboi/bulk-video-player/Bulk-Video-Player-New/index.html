@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bulk Video Player - Nikoboi</title>
+  <link rel="icon" type="image/png" href="assets/clippy.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <div class="controls">
+      <textarea id="input" placeholder="Paste full URLs from 111Movies (one per line)"></textarea>
+      <div class="hint">Example: https://111movies.com/tv/tt0121955/27/5</div>
+    </div>
+    <div class="row">
+      <button id="addBtn">Add Players</button>
+      <button id="clearBtn" class="secondary">Clear All</button>
+    </div>
+    <div class="meta">
+      <div><strong>Total Players: </strong><span id="count">0</span></div>
+    </div>
+    <div id="players" aria-live="polite"></div>
+    <div class="footer">
+      <div class="notice">This Website is <a href="https://github.com/NikoboiNFTB/Bulk-Video-Player"  target="_blank">Open-Source</a>!</div>
+    </div>
+    <script src="script.js"></script>
+  </div>
+</body>
+
+</html>

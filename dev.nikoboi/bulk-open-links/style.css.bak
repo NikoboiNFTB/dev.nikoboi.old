@@ -1,0 +1,120 @@
+/* Reset some default styling for consistency */
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+/* Container styling */
+.container {
+    background-color: #181818;
+    width: 90%;  /* Wider container */
+    max-width: 800px;  /* Prevents it from being too huge */
+    height: 64%;
+    border-radius: 8px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Controls styling */
+.controls {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+#input {
+    width: 100%;
+    max-width: 600px;
+    height: 120px;
+    padding: 12px;
+    background-color: #333;
+    border: 1px solid #555;
+    border-radius: 4px;
+    color: #fff;
+    font-size: 14px;
+    line-height: 1.5;
+    resize: none;
+    box-sizing: border-box;
+    margin: 0 auto;
+}
+
+.hint {
+    color: #bbb;
+    font-size: 12px;
+    margin-top: 8px;
+}
+
+/* Button styling */
+.row {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Stack vertically */
+    gap: 16px; /* Space between buttons */
+    align-items: center; /* Center buttons horizontally */
+}
+
+button {
+    width: 100%;  /* Full width of the row container */
+    max-width: 250px;
+    padding: 12px;
+    border: none;
+    border-radius: 4px;
+    background-color: #3366cc;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #0044cc;
+}
+
+.secondary {
+    background-color: #444;
+}
+
+.secondary:hover {
+    background-color: #555;
+}
+
+/* Footer styling */
+.footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 16px;
+    width: 100%;
+}
+
+.profile {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.notice {
+    color: #fff;
+    font-size: 14px;
+}
+
+/* Add spacing between text and link */
+.notice a {
+    color: #3366cc;
+    text-decoration: none;
+}
+
+.notice a:hover {
+    text-decoration: underline;
+}
