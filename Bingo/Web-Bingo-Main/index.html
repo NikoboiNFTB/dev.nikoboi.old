@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/jpeg" href="../assets/clippy.png">
+  <link rel="shortcut icon" href="https://static.wixstatic.com/media/d55657_353ea774bef04991b107a9f1080cf9ff%7Emv2.jpg/v1/fill/w_32%2Ch_32%2Clg_1%2Cusm_0.66_1.00_0.01/d55657_353ea774bef04991b107a9f1080cf9ff%7Emv2.jpg" type="image/jpeg">
+  <link rel="apple-touch-icon" href="https://static.wixstatic.com/media/d55657_353ea774bef04991b107a9f1080cf9ff%7Emv2.jpg/v1/fill/w_180%2Ch_180%2Clg_1%2Cusm_0.66_1.00_0.01/d55657_353ea774bef04991b107a9f1080cf9ff%7Emv2.jpg" type="image/jpeg">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <title>Bingo | Musikcafé After Eight r.f. | Jakobstad</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 32px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .bingo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .bingo-board {
+      display: grid;
+      grid-template-columns: repeat(5, 64px);
+      grid-template-rows: auto repeat(5, 64px);
+      gap: 8px;
+      text-align: center;
+      text-anchor: middle;
+      vertical-align: middle;
+    }
+
+    .bingo-board div {
+      border: 2px solid #000000;
+      line-height: 64px;
+      font-weight: bold;
+      user-select: none;
+      font-size: 24px;
+    }
+
+    .b-header {
+      font-size: 48px !important;
+      font-weight: bold;
+      background-color: #E40303;
+    }
+    .i-header {
+      font-size: 48px !important;
+      font-weight: bold;
+      background-color: #FF8C00;
+    }
+    .n-header {
+      font-size: 48px !important;
+      font-weight: bold;
+      background-color: #FFED00;
+    }
+    .g-header {
+      font-size: 48px !important;
+      font-weight: bold;
+      background-color: #004DFF;
+    }
+    .o-header {
+      font-size: 48px !important;
+      font-weight: bold;
+      background-color: #732982;
+    }
+
+    .free-space {
+      pointer-events: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .marked {
+      background-color: #008026;
+      color: #000;
+      font-weight: bold;
+    }
+
+    #resetBtn {
+      padding: 8px 16px;
+      font-size: 24px;
+      margin-top: 8px;
+      border-radius: 8px;
+    }
+
+    @keyframes pop {
+      0% {transform: scale(0.5); opacity: 0}
+      50% {transform: scale(1.1); opacity: 1; }
+      100% {transform: scale(1);}
+    }
+
+    #winMessage {
+      display: none;
+      padding: 16px 16px;
+      border: 2px solid #000000;
+      margin-top: 8px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #000000;
+      background-color: #008026;
+      animation: pop 0.5s ease-in-out forwards;
+      text-align: center;
+    }
+
+    .logo-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <div class="bingo-container">
+    <div class="bingo-board">
+      <!-- Header -->
+      <div class="b-header">B</div>
+      <div class="i-header">I</div>
+      <div class="n-header">N</div>
+      <div class="g-header">G</div>
+      <div class="o-header">O</div>
+
+      <!-- Row 1 -->
+      <div id="B1"></div>
+      <div id="I1"></div>
+      <div id="N1"></div>
+      <div id="G1"></div>
+      <div id="O1"></div>
+
+      <!-- Row 2 -->
+      <div id="B2"></div>
+      <div id="I2"></div>
+      <div id="N2"></div>
+      <div id="G2"></div>
+      <div id="O2"></div>
+
+      <!-- Row 3 -->
+      <div id="B3"></div>
+      <div id="I3"></div>
+      <div class="free-space marked" id="N3">
+        <img src="images/logo.svg" alt="logo" class="logo-img" />
+      </div>
+      <div id="G3"></div>
+      <div id="O3"></div>
+
+      <!-- Row 4 -->
+      <div id="B4"></div>
+      <div id="I4"></div>
+      <div id="N4"></div>
+      <div id="G4"></div>
+      <div id="O4"></div>
+
+      <!-- Row 5 -->
+      <div id="B5"></div>
+      <div id="I5"></div>
+      <div id="N5"></div>
+      <div id="G5"></div>
+      <div id="O5"></div>
+    </div>
+
+    <!-- Reset Button -->
+    <button id="resetBtn"></button>
+
+    <!-- Win Message -->
+    <div id="winMessage"></div>
+  </div>
+
+  <script>
+    let gameWon = false;
+
+    function getRandomUniqueNumbers(min, max, count) {
+      const numbers = new Set();
+      while (numbers.size < count) {
+        const num = Math.floor(Math.random() * (max - min + 1)) + min;
+        numbers.add(num);
+      }
+      return Array.from(numbers);
+    }
+
+    function fillBingoBoard() {
+      const ranges = {
+        B: [1, 15],
+        I: [16, 30],
+        N: [31, 45],
+        G: [46, 60],
+        O: [61, 75],
+      };
+
+      for (const [col, [min, max]] of Object.entries(ranges)) {
+        const count = col === "N" ? 4 : 5;
+        const numbers = getRandomUniqueNumbers(min, max, count);
+
+        let numberIndex = 0;
+        for (let row = 1; row <= 5; row++) {
+          if (col === "N" && row === 3) continue;
+
+          const cell = document.getElementById(col + row);
+          if (cell) {
+            cell.textContent = numbers[numberIndex];
+            numberIndex++;
+          }
+        }
+      }
+    }
+
+    function addClickListeners() {
+      const cells = document.querySelectorAll('.bingo-board div');
+
+      cells.forEach(cell => {
+        if ([...cell.classList].some(cls => cls.endsWith('-header'))) return;
+
+        cell.addEventListener('click', () => {
+          cell.classList.toggle('marked');
+          checkWin();
+        });
+      });
+    }
+
+    function resetBoard() {
+      gameWon = false;
+
+      const markedCells = document.querySelectorAll('.marked');
+      markedCells.forEach(cell => cell.classList.remove('marked'));
+
+      const winMessage = document.getElementById('winMessage');
+      winMessage.style.display = 'none';
+
+      // Re-mark the free space
+      const freeSpace = document.getElementById('N3');
+      if (freeSpace) {
+        freeSpace.innerHTML = '<img src="images/logo.svg" alt="logo" class="logo-img" />';
+        freeSpace.classList.add('marked');
+      }
+
+      fillBingoBoard();
+    }
+
+    function showWinMessage() {
+      const winMessage = document.getElementById('winMessage');
+      winMessage.style.display = 'block';
+      gameWon = true;
+      confetti({
+        particlecount: 256,
+        spread: 64,
+        origin: {y: 0.4},
+      });
+    }
+
+    function checkWin() {
+      if (gameWon) return;
+
+      const isMarked = (id) => {
+        const cell = document.getElementById(id);
+        return cell && cell.classList.contains('marked');
+      };
+
+      const letters = ['B', 'I', 'N', 'G', 'O'];
+
+      // Check rows
+      for (let row = 1; row <= 5; row++) {
+        let rowWin = true;
+        for (let col = 0; col < 5; col++) {
+          const cellId = letters[col] + row;
+          if (cellId === 'N3') continue;
+          if (!isMarked(cellId)) {
+            rowWin = false;
+            break;
+          }
+        }
+        if (rowWin) {
+          showWinMessage();
+          return true;
+        }
+      }
+
+      // Check columns
+      for (let col = 0; col < 5; col++) {
+        let colWin = true;
+        for (let row = 1; row <= 5; row++) {
+          const cellId = letters[col] + row;
+          if (cellId === 'N3') continue;
+          if (!isMarked(cellId)) {
+            colWin = false;
+            break;
+          }
+        }
+        if (colWin) {
+          showWinMessage();
+          return true;
+        }
+      }
+
+      // Check diagonals
+      let diag1 = true;
+      let diag2 = true;
+      for (let i = 0; i < 5; i++) {
+        const id1 = letters[i] + (i + 1); // Top-left to bottom-right
+        const id2 = letters[4 - i] + (i + 1); // Top-right to bottom-left
+
+        if (id1 !== 'N3' && !isMarked(id1)) diag1 = false;
+        if (id2 !== 'N3' && !isMarked(id2)) diag2 = false;
+      }
+
+      if (diag1 || diag2) {
+        showWinMessage();
+        return true;
+      }
+
+      return false;
+    }
+
+    window.onload = () => {
+      fillBingoBoard();
+      addClickListeners();
+
+      const resetButton = document.getElementById('resetBtn');
+      resetButton.textContent = "New Game";
+
+      const winMessage = document.getElementById('winMessage');
+      winMessage.textContent = "Bingo! 🎉"
+
+      resetButton.addEventListener('click', resetBoard);
+    };
+  </script>
+</body>
+</html>

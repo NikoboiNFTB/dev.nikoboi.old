@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Bingo Generator</title>
+
+  <link rel="icon" href="https://static.wixstatic.com/media/d55657_353ea774bef04991b107a9f1080cf9ff~mv2.jpg/v1/fill/w_32,h_32,lg_1,q_80/d55657_353ea774bef04991b107a9f1080cf9ff~mv2.jpg" type="image/jpeg">
+
+  <style>
+    body {
+      background: #ffffff;
+      font-family: Arial, sans-serif;
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .a4-page {
+  background: #ffffff;
+  width: 210mm;
+  height: 247mm;
+  padding: 0mm; /* reduced from 10mm */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  box-sizing: border-box;
+  overflow: hidden;
+    }
+
+    @media print {
+      body {
+        background: none;
+        padding: 0;
+        margin: 0;
+      }
+
+      .a4-page {
+        box-shadow: none;
+        margin: 0;
+      }
+      .a4-page:not(:last-child) {
+        break-after: page;
+        page-break-after: always;
+      }
+      html, body {
+        height: auto !important;
+        overflow: visible !important;
+      }
+    }
+
+    .bingo-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 64px;
+    }
+
+    .bingo-board {
+      display: grid;
+      grid-template-columns: repeat(5, 48px);
+      grid-template-rows: auto repeat(5, 48px);
+      margin-top: 64px;
+      gap: 8px;
+      text-align: center;
+      text-anchor: middle;
+      vertical-align: middle;
+    }
+
+    .bingo-board div {
+      border: 2px solid #000000;
+      line-height: 48px;
+      font-weight: bold;
+      user-select: none;
+    }
+
+    .b-header,
+    .i-header,
+    .n-header,
+    .g-header,
+    .o-header {
+      background-color: #808080;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+}
+
+    .free-space {
+      pointer-events: none;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo-img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="a4-page">
+    <div class="bingo-container">
+      <div id="board1" class="bingo-board"></div>
+      <div id="board2" class="bingo-board"></div>
+      <div id="board3" class="bingo-board"></div>
+      <div id="board4" class="bingo-board"></div>
+    </div>
+  </div>
+
+  <script>
+    function getRandomUniqueNumbers(min, max, count) {
+      const numbers = new Set();
+      while (numbers.size < count) {
+        const num = Math.floor(Math.random() * (max - min + 1)) + min;
+        numbers.add(num);
+      }
+      return Array.from(numbers);
+    }
+
+    function createBingoBoardHTML(boardId) {
+      const board = document.getElementById(boardId);
+      const headers = ['B', 'I', 'N', 'G', 'O'];
+
+      // Create header row
+      headers.forEach(header => {
+        const div = document.createElement('div');
+        div.textContent = header;
+        div.className = `${header.toLowerCase()}-header`;
+        board.appendChild(div);
+      });
+
+      // Create cells
+      for (let row = 1; row <= 5; row++) {
+        for (const col of headers) {
+          const cell = document.createElement('div');
+          const cellId = `${boardId}-${col}${row}`;
+          cell.id = cellId;
+
+          if (col === 'N' && row === 3) {
+            cell.className = 'free-space marked';
+            cell.innerHTML = '<img src="images/logo.svg" alt="logo" class="logo-img" />';
+          }
+
+          board.appendChild(cell);
+        }
+      }
+    }
+
+    function fillBingoBoard(boardId) {
+      const ranges = {
+        B: [1, 15],
+        I: [16, 30],
+        N: [31, 45],
+        G: [46, 60],
+        O: [61, 75],
+      };
+
+      for (const [col, [min, max]] of Object.entries(ranges)) {
+        const count = col === "N" ? 4 : 5;
+        const numbers = getRandomUniqueNumbers(min, max, count);
+
+        let numberIndex = 0;
+        for (let row = 1; row <= 5; row++) {
+          if (col === "N" && row === 3) continue;
+
+          const cellId = `${boardId}-${col}${row}`;
+          const cell = document.getElementById(cellId);
+          if (cell) {
+            cell.textContent = numbers[numberIndex];
+            numberIndex++;
+          }
+        }
+      }
+    }
+
+    window.onload = () => {
+      const boardIds = ['board1', 'board2', 'board3', 'board4'];
+      boardIds.forEach(id => {
+        createBingoBoardHTML(id);
+        fillBingoBoard(id);
+      });
+    };
+  </script>
+</body>
+</html>
