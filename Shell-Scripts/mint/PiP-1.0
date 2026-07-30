@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+
+# Quick clanker-written script
+
+# Get screen dimensions (primary display)
+read SW SH <<<"$(xdpyinfo | awk '/dimensions:/ {split($2,a,"x"); print a[1], a[2]}')"
+
+# Calculate quarter size (top-right)
+W=$((SW / 2))
+H=$((SH / 2))
+X=$((SW / 2))
+Y=0
+
+# Get window list
+mapfile -t WINDOWS < <(wmctrl -l)
+
+# Try to find Picture-in-Picture automatically
+for i in "${!WINDOWS[@]}"; do
+	if [[ "${WINDOWS[$i]}" == *"Picture-in-Picture"* ]]; then
+		WIN_ID=$(echo "${WINDOWS[$i]}" | awk '{print $1}')
+		echo "Auto-selected PiP window: $WIN_ID"
+		wmctrl -i -r "$WIN_ID" -e "0,$X,$Y,$W,$H"
+		exit 0
+	fi
+done
+
+# Otherwise, show numbered list
+echo "Select a window:"
+for i in "${!WINDOWS[@]}"; do
+	printf "%d) %s\n" "$((i + 1))" "${WINDOWS[$i]}"
+done
+
+read -rp "Enter number: " CHOICE
+
+# Validate input like a responsible adult
+if ! [[ "$CHOICE" =~ ^[0-9]+$ ]] || ((CHOICE < 1 || CHOICE > ${#WINDOWS[@]})); then
+	echo "Invalid selection. Congratulations."
+	exit 1
+fi
+
+# Extract chosen window ID
+WIN_ID=$(echo "${WINDOWS[$((CHOICE - 1))]}" | awk '{print $1}')
+
+# Resize it
+wmctrl -i -r "$WIN_ID" -e "0,$X,$Y,$W,$H"

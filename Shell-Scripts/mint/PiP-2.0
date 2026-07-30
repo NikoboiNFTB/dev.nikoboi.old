@@ -1,0 +1,99 @@
+#!/usr/bin/env bash
+
+# Get primary screen dimensions
+read SW SH <<<"$(xdpyinfo | awk '/dimensions:/ {split($2,a,"x"); print a[1], a[2]}')"
+
+# ----- Size selection -----
+
+echo "Choose PiP size:"
+echo "1) 1/1 (Full screen)"
+echo "2) 1/2 (Half width × half height)"
+echo "3) 1/4 (Quarter width × quarter height)"
+
+read -rp "Choice [1-3]: " SIZE_CHOICE
+
+case "$SIZE_CHOICE" in
+1)
+	W=$SW
+	H=$SH
+	;;
+2)
+	W=$((SW / 2))
+	H=$((SH / 2))
+	;;
+3)
+	W=$((SW / 4))
+	H=$((SH / 4))
+	;;
+*)
+	echo "Invalid size."
+	exit 1
+	;;
+esac
+
+# ----- Corner selection -----
+
+echo
+echo "Choose corner:"
+echo "1) Top-left"
+echo "2) Top-right"
+echo "3) Bottom-left"
+echo "4) Bottom-right"
+
+read -rp "Choice [1-4]: " CORNER
+
+case "$CORNER" in
+1)
+	X=0
+	Y=0
+	;;
+2)
+	X=$((SW - W))
+	Y=0
+	;;
+3)
+	X=0
+	Y=$((SH - H))
+	;;
+4)
+	X=$((SW - W))
+	Y=$((SH - H))
+	;;
+*)
+	echo "Invalid corner."
+	exit 1
+	;;
+esac
+
+# ----- Get windows -----
+
+mapfile -t WINDOWS < <(wmctrl -l)
+
+# Try automatic PiP detection
+for i in "${!WINDOWS[@]}"; do
+	if [[ "${WINDOWS[$i]}" == *"Picture-in-Picture"* ]]; then
+		WIN_ID=$(awk '{print $1}' <<<"${WINDOWS[$i]}")
+		echo "Auto-selected PiP window: $WIN_ID"
+		wmctrl -i -r "$WIN_ID" -e "0,$X,$Y,$W,$H"
+		exit 0
+	fi
+done
+
+# Manual selection
+
+echo
+echo "Select a window:"
+for i in "${!WINDOWS[@]}"; do
+	printf "%2d) %s\n" "$((i + 1))" "${WINDOWS[$i]}"
+done
+
+read -rp "Enter number: " CHOICE
+
+if ! [[ "$CHOICE" =~ ^[0-9]+$ ]] || ((CHOICE < 1 || CHOICE > ${#WINDOWS[@]})); then
+	echo "Invalid selection. A stunning achievement."
+	exit 1
+fi
+
+WIN_ID=$(awk '{print $1}' <<<"${WINDOWS[$((CHOICE - 1))]}")
+
+wmctrl -i -r "$WIN_ID" -e "0,$X,$Y,$W,$H"
