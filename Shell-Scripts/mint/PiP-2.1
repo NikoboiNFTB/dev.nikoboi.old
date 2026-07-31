@@ -1,0 +1,146 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Get primary screen dimensions
+read SW SH <<<"$(xdpyinfo | awk '/dimensions:/ {split($2,a,"x"); print a[1], a[2]}')"
+
+usage() {
+	cat <<EOF
+Usage:
+    PiP [SIZE] [CORNER]
+
+SIZE:
+    1/1   1
+    1/2   2
+    1/4   3
+
+CORNER:
+    tl    1
+    tr    2
+    bl    3
+    br    4
+
+Examples:
+    PiP
+    PiP "1/2" br
+    PiP 2 4
+EOF
+	exit 1
+}
+
+############################
+# Size
+############################
+
+if [[ $# -ge 1 ]]; then
+	SIZE="$1"
+else
+	echo "Choose size:"
+	echo "  1) 1/1"
+	echo "  2) 1/2"
+	echo "  3) 1/4"
+	read -rp "> " SIZE
+
+	case "$SIZE" in
+	1) SIZE="1/1" ;;
+	2) SIZE="1/2" ;;
+	3) SIZE="1/4" ;;
+	esac
+fi
+
+case "$SIZE" in
+1 | 1/1)
+	W=$SW
+	H=$SH
+	;;
+2 | 1/2)
+	W=$((SW / 2))
+	H=$((SH / 2))
+	;;
+3 | 1/4)
+	W=$((SW / 4))
+	H=$((SH / 4))
+	;;
+*)
+	echo "Invalid size."
+	usage
+	;;
+esac
+
+############################
+# Corner
+############################
+
+if [[ $# -ge 2 ]]; then
+	CORNER="${2,,}"
+else
+	echo
+	echo "Choose corner:"
+	echo "  1) Top-left"
+	echo "  2) Top-right"
+	echo "  3) Bottom-left"
+	echo "  4) Bottom-right"
+	read -rp "> " CORNER
+	CORNER="${CORNER,,}"
+fi
+
+case "$CORNER" in
+1 | tl)
+	X=0
+	Y=0
+	;;
+2 | tr)
+	X=$((SW - W))
+	Y=0
+	;;
+3 | bl)
+	X=0
+	Y=$((SH - H))
+	;;
+4 | br)
+	X=$((SW - W))
+	Y=$((SH - H))
+	;;
+*)
+	echo "Invalid corner."
+	usage
+	;;
+esac
+
+############################
+# Find PiP window
+############################
+
+mapfile -t WINDOWS < <(wmctrl -l)
+
+for WINDOW in "${WINDOWS[@]}"; do
+	if [[ "$WINDOW" == *"Picture-in-Picture"* ]]; then
+		WIN_ID=$(awk '{print $1}' <<<"$WINDOW")
+		echo "Auto-selected PiP window: $WIN_ID"
+		wmctrl -i -r "$WIN_ID" -e "0,$X,$Y,$W,$H"
+		exit 0
+	fi
+done
+
+############################
+# Manual selection
+############################
+
+echo
+echo "Select a window:"
+
+for i in "${!WINDOWS[@]}"; do
+	printf "%2d) %s\n" "$((i + 1))" "${WINDOWS[$i]}"
+done
+
+read -rp "> " CHOICE
+
+if ! [[ "$CHOICE" =~ ^[0-9]+$ ]] || ((CHOICE < 1 || CHOICE > ${#WINDOWS[@]})); then
+	echo "Invalid selection. Humanity had one job."
+	exit 1
+fi
+
+WIN_ID=$(awk '{print $1}' <<<"${WINDOWS[$((CHOICE - 1))]}")
+
+wmctrl -i -r "$WIN_ID" -e "0,$X,$Y,$W,$H"

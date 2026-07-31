@@ -1,0 +1,212 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# Get primary screen dimensions
+read SW SH <<<"$(xdpyinfo | awk '/dimensions:/ {split($2,a,"x"); print a[1], a[2]}')"
+
+usage() {
+	cat <<EOF
+Usage:
+    PiP [SIZE] [POSITION]
+
+SIZE:
+    1/1   1
+    1/2   2
+    1/4   3
+
+POSITION:
+    Size 1/1:
+        1
+
+    Size 1/2:
+        tl  tr  bl  br
+        1   2   3   4
+
+    Size 1/4:
+         1  2  3  4
+         5  6  7  8
+         9 10 11 12
+        13 14 15 16
+
+Examples:
+    PiP
+    PiP "1/2" br
+    PiP 2 4
+    PiP 3 10
+EOF
+	exit 1
+}
+
+############################
+# Size
+############################
+
+if [[ $# -ge 1 ]]; then
+	SIZE="$1"
+else
+	echo "Choose size:"
+	echo "  1) 1/1"
+	echo "  2) 1/2"
+	echo "  3) 1/4"
+	read -rp "> " SIZE
+
+	case "$SIZE" in
+	1) SIZE="1/1" ;;
+	2) SIZE="1/2" ;;
+	3) SIZE="1/4" ;;
+	esac
+fi
+
+case "$SIZE" in
+1 | 1/1)
+	W=$SW
+	H=$SH
+	;;
+2 | 1/2)
+	W=$((SW / 2))
+	H=$((SH / 2))
+	;;
+3 | 1/4)
+	W=$((SW / 4))
+	H=$((SH / 4))
+	;;
+*)
+	echo "Invalid size."
+	usage
+	;;
+esac
+
+############################
+# Position
+############################
+
+if [[ $# -ge 2 ]]; then
+	POSITION="${2,,}"
+else
+	echo
+	echo "Choose position:"
+
+	case "$SIZE" in
+	1 | 1/1)
+		echo "  1) Full-screen"
+		;;
+
+	2 | 1/2)
+		echo "  1) Top-left"
+		echo "  2) Top-right"
+		echo "  3) Bottom-left"
+		echo "  4) Bottom-right"
+		;;
+
+	3 | 1/4)
+		echo "   1  2  3  4"
+		echo "   5  6  7  8"
+		echo "   9 10 11 12"
+		echo "  13 14 15 16"
+		;;
+	esac
+
+	read -rp "> " POSITION
+	POSITION="${POSITION,,}"
+fi
+
+case "$SIZE" in
+############################
+# Full screen
+############################
+1 | 1/1)
+	case "$POSITION" in
+	1)
+		X=0
+		Y=0
+		;;
+	*)
+		echo "For size 1/1, position must be 1."
+		exit 1
+		;;
+	esac
+	;;
+
+############################
+# Quarter screen
+############################
+2 | 1/2)
+	case "$POSITION" in
+	1 | tl)
+		X=0
+		Y=0
+		;;
+	2 | tr)
+		X=$((SW - W))
+		Y=0
+		;;
+	3 | bl)
+		X=0
+		Y=$((SH - H))
+		;;
+	4 | br)
+		X=$((SW - W))
+		Y=$((SH - H))
+		;;
+	*)
+		echo "For size 1/2, position must be 1-4 (or tl/tr/bl/br)."
+		exit 1
+		;;
+	esac
+	;;
+
+############################
+# Sixteenth screen
+############################
+3 | 1/4)
+	if ! [[ "$POSITION" =~ ^([1-9]|1[0-6])$ ]]; then
+		echo "For size 1/4, position must be 1-16."
+		exit 1
+	fi
+
+	INDEX=$((POSITION - 1))
+	ROW=$((INDEX / 4))
+	COL=$((INDEX % 4))
+
+	X=$((COL * W))
+	Y=$((ROW * H))
+	;;
+esac
+
+############################
+# Find PiP window
+############################
+
+mapfile -t WINDOWS < <(wmctrl -l)
+
+for WINDOW in "${WINDOWS[@]}"; do
+	if [[ "$WINDOW" == *"Picture-in-Picture"* ]]; then
+		WIN_ID=$(awk '{print $1}' <<<"$WINDOW")
+		echo "Auto-selected PiP window: $WIN_ID"
+		wmctrl -i -r "$WIN_ID" -e "0,$X,$Y,$W,$H"
+		exit 0
+	fi
+done
+
+############################
+# Manual selection
+############################
+
+echo
+echo "Select a window:"
+
+for i in "${!WINDOWS[@]}"; do
+	printf "%2d) %s\n" "$((i + 1))" "${WINDOWS[$i]}"
+done
+
+read -rp "> " CHOICE
+
+if ! [[ "$CHOICE" =~ ^[0-9]+$ ]] || ((CHOICE < 1 || CHOICE > ${#WINDOWS[@]})); then
+	echo "Invalid selection. Humanity had one job."
+	exit 1
+fi
+
+WIN_ID=$(awk '{print $1}' <<<"${WINDOWS[$((CHOICE - 1))]}")
+
+wmctrl -i -r "$WIN_ID" -e "0,$X,$Y,$W,$H"
